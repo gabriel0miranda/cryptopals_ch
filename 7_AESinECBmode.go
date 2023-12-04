@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
     "os"
     "log"
     "fmt"
@@ -23,12 +24,16 @@ func main(){
 
     key := "YELLOW SUBMARINE"
 
-    file, err := os.ReadFile("7.txt")
+    file, err := os.Open("7.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 
+    allBytes := make([]byte, 4000)
+    file.Read(allBytes)
+	content, _ := base64.StdEncoding.DecodeString(string(allBytes))
+
     fmt.Printf("Key: %s\n", string(key))
-    text := decryptAESECB(file, []byte(key))
+    text := decryptAESECB(content, []byte(key))
     fmt.Printf("Message:\n%s\n", string(text))
 }
